@@ -63,6 +63,7 @@ skills采用分层调用的方式，更准确灵活。具体来说，用户指�
 目前初始只提供6个基础skills，用户可根据需要自行添加
 
 new_product：jobs_scoping（功能边界定义），kano_model（卡诺模型），pov（产品pov称述），user_journey_map（用户旅程地图）
+
 iteration：five_why（五why模型）， iceberg_model（冰山模型），jobs_scoping，pov
 
 
