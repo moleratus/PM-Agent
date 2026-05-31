@@ -29,6 +29,21 @@ conda activate metagpt
 git clone https://github.com/moleratus/PM-Agent.git
 ```
 
+初始化配置：
+```bash
+# Check https://docs.deepwisdom.ai/main/en/guide/get_started/configuration.html for more details
+metagpt --init-config  # it will create ~/.metagpt/config2.yaml, just modify it to your needs
+```
+
+设置api key，位置位于刚刚创建的配置文件 `~/.metagpt/config2.yaml `：
+```bash
+llm:
+  api_type: "openai"  # or azure / ollama / groq etc. Check LLMType for more options
+  model: "gpt-4-turbo"  # or gpt-3.5-turbo
+  base_url: "https://api.openai.com/v1"  # or forward url / other llm url
+  api_key: "YOUR_API_KEY"
+```
+
 # 如何使用
 
 进入项目目录
@@ -101,5 +116,7 @@ When you see [UPDATE MODE], apply this skill first to frame the problem before a
 Primary POV: "[User] needs [need] because [insight]."
 2-3 alternative phrasings + rationale for selecting the final version.
 
+# 相关链接
 
+感谢MetaGPT对开源社区的贡献：https://github.com/FoundationAgents/MetaGPT
 
