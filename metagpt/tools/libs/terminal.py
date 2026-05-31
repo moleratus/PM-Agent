@@ -104,6 +104,12 @@ class Terminal:
         else:
             output += await self._read_and_process_output(cmd)
 
+        # 清理控制字符和命令行提示符，防止被误用为文件路径
+        output = re.sub(r'\x1b\[[0-9;]*[mGKHF]', '', output)  # ANSI转义码
+        output = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', output)  # 控制字符（保留\n\r\t）
+        output = re.sub(r'\(pm-agent\)\s+[^\n]*>', '', output)  # 命令行提示符
+        output = re.sub(r'\r\n', '\n', output)  # 统一换行符
+        output = output.strip()
         return output
 
     async def execute_in_conda_env(self, cmd: str, env, daemon=False) -> str:

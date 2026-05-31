@@ -1,0 +1,44 @@
+---
+name: prototype_guide
+description: Generate clickable HTML prototype based on PRD
+roles: [Engineer]
+triggers: [prototype, UI, interface, frontend, 原型, 界面, 交互, 前端]
+default: true
+---
+# Prototype Guide (MANDATORY: Apply this skill for ALL development tasks)
+You MUST generate a single self-contained HTML prototype file, NOT a full production application.
+
+## Goal
+Create one clickable HTML file demonstrating core user flows from the PRD.
+
+## Requirements
+- Single index.html with inline CSS and JavaScript, no external dependencies
+- Implement all core screens from the PRD UI Design section
+- JavaScript navigation between screens (no backend needed)
+- Clean modern styling with flexbox and CSS variables
+- Mobile-friendly responsive layout
+- Realistic placeholder content and data
+
+## Steps
+1. Read the PRD to identify core screens and user flows
+2. Plan all screens and navigation structure
+3. Write index.html section by section using Editor.append_file (max 1000 chars each)
+4. Verify the file is complete with Editor.read
+
+## Output
+Single file saved to: workspace/项目名/prototype/index.html
+
+## Writing Instructions
+MANDATORY: You MUST use Engineer2.write_new_code to create the HTML file. This is the ONLY acceptable method.
+
+Correct approach:
+1. Call Engineer2.write_new_code with:
+   - path: absolute path to index.html
+   - file_description: describe all screens, features, and interactions needed
+
+FORBIDDEN methods (will cause system crash):
+- Editor.write (causes JSON truncation)
+- Editor.append_file (causes encoding errors)
+- Editor.create_file + Editor.append_file (causes truncation)
+
+Engineer2.write_new_code is the ONLY method that handles large HTML files correctly.

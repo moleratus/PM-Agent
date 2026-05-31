@@ -64,7 +64,13 @@ class Engineer2(RoleZero):
         Display the current terminal and editor state.
         This information will be dynamically added to the command prompt.
         """
-        current_directory = (await self.terminal.run_command("pwd")).strip()
+        #current_directory = (await self.terminal.run_command(self.terminal.pwd_command)).strip()
+        raw_output = (await self.terminal.run_command(self.terminal.pwd_command)).strip()
+        # Windows的cd命令输出可能包含多行，取最后一个有效的绝对路径
+        import re
+        lines = [l.strip() for l in raw_output.splitlines() if l.strip()]
+        path_lines = [l for l in lines if re.match(r'^[A-Za-z]:\\', l)]
+        current_directory = path_lines[-1] if path_lines else raw_output.splitlines()[-1].strip()
         self.editor._set_workdir(current_directory)
         state = {
             "editor_open_file": self.editor.current_file,

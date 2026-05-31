@@ -46,18 +46,13 @@ Note:
 21. When planning, consider whether images are needed. If you are developing a showcase website, start by using ImageGetter.get_image to obtain the necessary images.
 22. When planning, merge multiple tasks that operate on the same file into a single task. For example, create one task for writing unit tests for all functions in a class. Also in using the editor, merge multiple tasks that operate on the same file into a single task.
 23. When create unit tests for a code file, use Editor.read() to read the code file before planing. And create one plan to writing the unit test for the whole file.
-24. The priority to select technology stacks: Describe in Sytem Design and Project Schedule > Vite, React, MUI and Tailwind CSS > native HTML 
-24.1. The React template is in the "{react_template_path}" and Vue template is in the "{vue_template_path}". 
-25. If use Vite, Vue/React, MUI, and Tailwind CSS as the programming language or no programming language is specified in document or user requirement, follow these steps:
-25.1. Create the project folder if no exists. Use cmd " mkdir -p {{project_name}}_{timestamp} "
-25.2. Copy a Vue/React template to your project folder, move into it and list the file in it. Use cmd "cp -r {{template_folder}}/* {{workspace}}/{{project_name}}_{timestamp}/ && cd {{workspace}}/{{project_name}}_{timestamp} && pwd && tree ". This must be a single response without other commands.
-25.3. User Editor.read to read the content of files in the src and read the index.html in the project root before making a plan.
-25.4. List the files that you need to rewrite and create when making a plan. Indicate clearly what file to rewrite or create in each task. "index.html" and all files in the src folder always must be rewritten. Use Tailwind CSS for styling. Notice that you are in {{project_name}}_{timestamp}.
-25.5. After finish the project. use "pnpm install && pnpm run build" to build the project and then deploy the project to the public using the dist folder which contains the built project.
+24. The priority to select technology stacks: Always use a single self-contained HTML file with native HTML, CSS, and JavaScript. Do NOT use React, Vue, Vite, or any framework unless the user explicitly requests it.
 26. Engineer2.write_new_code is used to write or rewrite the code, which will modify the whole file. Editor.edit_file_by_replace is used to edit a small part of the file.
 27. Deploye the project to the public after you install and build the project, there will be a folder named "dist" in the current directory after the build.
 28. Use Engineer2.write_new_code to rewrite the whole file when you fail to use Editor.edit_file_by_replace more than three times.
 29. Just continue the work, if the template path does not exits.
+30. When a generated file appears incomplete or truncated (e.g., missing closing tags like </html>, </body>, or the last few lines of code), you MUST use Engineer2.write_new_code to rewrite the ENTIRE file from scratch. Never use Editor.edit_file_by_replace to append or patch a truncated file.
+31. When using Editor.edit_file_by_replace, `first_replaced_line_content` and `last_replaced_line_content` MUST each be a single line of text with NO newline characters (\n). If you need to replace multiple lines, set first_replaced_line_number and last_replaced_line_number to cover the full range, but each *_content parameter must match exactly one line.
 """.format(
     vue_template_path=VUE_TEMPLATE_PATH.resolve().absolute(),
     react_template_path=REACT_TEMPLATE_PATH.resolve().absolute(),
@@ -97,8 +92,9 @@ Your task is to write the {file_name} according to the User Requirement. You mus
 
 # Output
 While some concise thoughts are helpful, code is absolutely required. Always output one and only one code block in your response. DO NOT leave any TODO or placeholder.
-Output code in the following format:
+Output code in the following format, use plain code block without language identifier:
 ```
 your code
 ```
+Do NOT write ```html, ```javascript, ```css or any language tag after the triple backticks.
 """

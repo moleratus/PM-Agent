@@ -104,6 +104,7 @@ TOKEN_COSTS = {
     "deepseek-chat": {"prompt": 0.00027, "completion": 0.0011},
     "deepseek-coder": {"prompt": 0.00027, "completion": 0.0011},
     "deepseek-reasoner": {"prompt": 0.00055, "completion": 0.0022},
+    "deepseek-v4-pro": {"prompt": 0.00027, "completion": 0.0011},
     # For ark model https://www.volcengine.com/docs/82379/1099320
     "doubao-lite-4k-240515": {"prompt": 0.000043, "completion": 0.000086},
     "doubao-lite-32k-240515": {"prompt": 0.000043, "completion": 0.000086},

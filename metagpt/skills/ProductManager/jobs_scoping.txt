@@ -1,0 +1,21 @@
+---
+name: jobs_scoping
+description: Define complete job-to-be-done map for a feature request
+roles: [Product Manager]
+scenarios: [new_product, iteration]
+triggers: [job, goal, goals, task, tasks, workflow, workflows, process, daily, routine, scenario, use case, 用户目标, 任务, 工作流, 场景, 使用场景, 日常]
+default: false
+---
+# Jobs Scoping (MANDATORY in UPDATE MODE)
+When you see [UPDATE MODE], apply this skill to define the full scope of the user's job-to-be-done before updating the PRD.
+
+## Steps
+1. **Define the core functional job** — [verb] + [object] + [contextual clarifier].
+2. **Map the job steps** — Define, Locate, Prepare, Confirm, Execute, Monitor, Modify, Conclude.
+3. **Identify related jobs** — Adjacent jobs before, during, or after.
+4. **Layer emotional and social jobs** — How user wants to feel and be perceived.
+5. **Surface desired outcomes** — "Minimize likelihood of X" or "Increase speed of Y."
+
+## Output Format
+A job map table: Job Step | Functional Need | Emotional Job | Social Job | Desired Outcome.
+Include a summary of highest-opportunity areas.

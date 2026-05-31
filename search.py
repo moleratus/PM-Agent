@@ -1,0 +1,13 @@
+import os
+
+for root, dirs, files in os.walk(r'D:\AIProjects\MetaGPT\metagpt'):
+    for f in files:
+        if not f.endswith('.py'):
+            continue
+        path = os.path.join(root, f)
+        try:
+            for i, line in enumerate(open(path, encoding='utf-8'), 1):
+                if any(k in line for k in ['shell=True', 'os.popen', 'check_output', '"pwd"', "'pwd'"]):
+                    print(f'{path}:{i}: {line.rstrip()}')
+        except:
+            pass

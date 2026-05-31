@@ -168,6 +168,32 @@ ANYTHING_UNCLEAR = ActionNode(
     example="Currently, all aspects of the project are clear.",
 )
 
+KANO_ANALYSIS = ActionNode(
+    key="Kano Analysis",
+    expected_type=str,
+    instruction="""
+    Apply Kano Model before writing requirements.
+
+    1. Extract candidate product features.
+    2. Classify each feature into:
+    - Must-be
+    - Performance
+    - Delighter
+    - Indifferent
+    - Reverse
+
+    Return a table including:
+    Feature | Category | Evidence | Priority Recommendation
+
+    Use this analysis to guide prioritization.
+    """,
+    example="""
+    | Feature | Category | Evidence | Priority Recommendation |
+    | Task reminder | Must-be | Core expectation | Highest priority |
+    | AI study planner | Delighter | Unexpected value | Future roadmap |
+    """
+    )
+
 ISSUE_TYPE = ActionNode(
     key="issue_type",
     expected_type=str,
@@ -194,6 +220,7 @@ NODES = [
     PROJECT_NAME,
     PRODUCT_GOALS,
     USER_STORIES,
+    KANO_ANALYSIS,
     COMPETITIVE_ANALYSIS,
     COMPETITIVE_QUADRANT_CHART,
     REQUIREMENT_ANALYSIS,

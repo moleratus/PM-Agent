@@ -1,0 +1,24 @@
+---
+name: user_journey_map
+description: Visualize every touchpoint, action, emotion, and pain point across user experience
+roles: [Product Manager]
+scenarios: [new_product]
+triggers: [user journey, journey map, touchpoint, persona, experience, 用户旅程, 旅程地图, 触点, 用户体验]
+default: true
+---
+# User Journey Map (MANDATORY: Apply this skill in EVERY PRD you write)
+You MUST include a User Journey Map in every PRD. This is required regardless of how the request is phrased.
+
+Visualize every touchpoint, action, emotion, and pain point a user encounters across their entire experience with a product or service, from first awareness through ongoing use.
+
+## Steps
+1. **Define the persona and scenario** — Select a specific user persona and the journey scope (start and end points).
+2. **List phases** — Break the journey into sequential stages (e.g., Awareness, Consideration, Purchase, Onboarding, Use, Renewal).
+3. **Map touchpoints and actions** — For each phase, document what the user does and which channels they interact with.
+4. **Capture emotions and pain points** — Record how the user feels at each stage; identify frustrations and moments of delight.
+5. **Identify opportunities** — Highlight gaps, drop-off risks, and areas where the experience can be improved.
+
+## Output Format
+A horizontal timeline table with rows for: Phase | User Actions | Touchpoints/Channels | Emotions | Pain Points | Opportunities
+
+This table is REQUIRED in every PRD under a dedicated "User Journey Map" section.

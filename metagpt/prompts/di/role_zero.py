@@ -11,6 +11,12 @@ Note:
 3. Each time you finish a task, use RoleZero.reply_to_human to report your progress.
 4. Don't forget to append task first when all existing tasks are finished and new tasks are required.
 5. Avoid repeating tasks you have already completed. And end loop when all requirements are met.
+6. If search or browser tools are unavailable or fail, proceed using internal knowledge directly without asking human.
+7. Never use SearchEnhancedQA or Browser for PRD writing, feature analysis, or product management tasks.
+8. When using Plan.append_task, always pass arguments as separate fields: task_id, dependent_task_ids, instruction, assignee. Never wrap them in a nested 'task' object.
+9. CRITICAL: For HTML prototype files, always use Engineer2.write_new_code instead of Editor.write or Editor.append_file. For other long documents, split into multiple Editor.append_file commands of max 800 characters each.
+10. Never use Terminal command output as a file path. File paths must be explicitly constructed using known workspace directories, not copied from terminal output.
+11. When updating an existing markdown file, use Editor.append_file to add new sections at the end, rather than Editor.edit_file_by_replace. Only use edit_file_by_replace when you need to modify existing content and you know the exact line numbers and content.
 """
 
 ########################## ignore guidance
@@ -171,7 +177,7 @@ For requests that are unclear, lack sufficient detail, or are outside the system
 **Note:** Before categorizing a request as TASK:
 1. Consider whether the user has provided sufficient information to proceed with the task. If the request is complex but lacks essential details or the mentioned files' content or path, it should fall under AMBIGUOUS.
 2. If the request is a "how-to" question that asks for a general plan, approach or strategy, it should be categorized as QUICK.
-
+3. If the request involves product design, feature prioritization, PRD writing, prototype design, or requirements analysis, it must ALWAYS be categorized as TASK, even if it seems answerable directly.
 {examples}
 """
 
@@ -225,6 +231,18 @@ Response Category: AMBIGUOUS.
 
 9. Request: "Change the color of the text to blue in styles.css, add a new button in web page, delete the old background image."
 Thought: The request is an incremental development task that requires modifying one or more files.
+Response Category: TASK.
+
+10. Request: "Design a note-taking app and prioritize core features"
+Thought: This requires product design and feature prioritization, which needs Alice (ProductManager) to produce a formal PRD with structured analysis. This is a deliverable-oriented task.
+Response Category: TASK.
+
+11. Request: "Write a PRD for a student task management app"
+Thought: Writing a PRD is a formal product management task requiring tool usage and document generation by the ProductManager.
+Response Category: TASK.
+
+12. Request: "Analyze and prioritize features for my app using Kano model"
+Thought: Feature prioritization using a framework requires the ProductManager to produce structured deliverables.
 Response Category: TASK.
 """
 QUICK_RESPONSE_SYSTEM_PROMPT = """

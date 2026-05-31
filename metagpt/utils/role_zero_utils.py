@@ -107,6 +107,9 @@ async def parse_commands(command_rsp: str, llm, exclusive_tool_commands: list[st
             - A boolean flag indicating success (True) or failure (False).
     """
     try:
+        if not command_rsp or not command_rsp.strip():
+            logger.warning("LLM returned empty response, using end command as fallback.")
+            return [{"command_name": "end", "args": {}}], True, command_rsp
         commands = CodeParser.parse_code(block=None, lang="json", text=command_rsp)
         if commands.endswith("]") and not commands.startswith("["):
             commands = "[" + commands
@@ -117,12 +120,16 @@ async def parse_commands(command_rsp: str, llm, exclusive_tool_commands: list[st
         try:
             commands = json.loads(CodeParser.parse_code(block=None, lang="json", text=commands))
         except json.JSONDecodeError:
-            # repair escape error of code and math
-            commands = CodeParser.parse_code(block=None, lang="json", text=command_rsp)
-            new_command = repair_escape_error(commands)
-            commands = json.loads(
-                repair_llm_raw_output(output=new_command, req_keys=[None], repair_type=RepairType.JSON)
-            )
+            try:
+                # repair escape error of code and math
+                commands = CodeParser.parse_code(block=None, lang="json", text=command_rsp)
+                new_command = repair_escape_error(commands)
+                commands = json.loads(
+                    repair_llm_raw_output(output=new_command, req_keys=[None], repair_type=RepairType.JSON)
+                )
+            except Exception:
+                logger.warning("All JSON repair attempts failed, using end command as fallback.")
+                return [{"command_name": "end", "args": {}}], True, command_rsp
     except Exception as e:
         tb = traceback.format_exc()
         print(tb)
@@ -134,7 +141,10 @@ async def parse_commands(command_rsp: str, llm, exclusive_tool_commands: list[st
         commands = commands["commands"] if "commands" in commands else [commands]
 
     # Set the exclusive command flag to False.
-    command_flag = [command["command_name"] not in exclusive_tool_commands for command in commands]
+    
+    command_flag = [command.get("command_name", "") not in exclusive_tool_commands for command in commands if
+                    "command_name" in command]
+    commands = [command for command in commands if "command_name" in command]
     if command_flag.count(False) > 1:
         # Keep only the first exclusive command
         index_of_first_exclusive = command_flag.index(False)
@@ -167,8 +177,15 @@ def get_plan_status(planner) -> Tuple[str, str]:
 
 
 def format_terminal_output(cmd: dict, raw_output: str) -> str:
-    if len(raw_output) <= 10:
-        command_output = f"\n[command]: {cmd['args']['cmd']} \n[command output] : {raw_output} (pay attention to this.)"
+    import re
+    # 清理控制字符和命令行提示符
+    clean_output = re.sub(r'\x1b\[[0-9;]*m', '', raw_output)  # ANSI颜色码
+    clean_output = re.sub(r'[\x00-\x1f\x7f]', '', clean_output)  # 控制字符
+    clean_output = re.sub(r'\(pm-agent\)[^\n]*>', '', clean_output)  # 命令行提示符
+    clean_output = clean_output.strip()
+
+    if len(clean_output) <= 10:
+        command_output = f"\n[command]: {cmd['args']['cmd']} \n[command output] : {clean_output} (pay attention to this.)"
     else:
-        command_output = f"\n[command]: {cmd['args']['cmd']} \n[command output] : {raw_output}"
+        command_output = f"\n[command]: {cmd['args']['cmd']} \n[command output] : {clean_output}"
     return command_output

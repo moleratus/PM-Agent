@@ -14,7 +14,7 @@ app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
 def generate_repo(
     idea,
     investment=3.0,
-    n_round=5,
+    n_round=20,
     code_review=True,
     run_tests=False,
     implement=True,
@@ -24,6 +24,9 @@ def generate_repo(
     reqa_file="",
     max_auto_summarize_code=0,
     recover_path=None,
+    update_mode=False,
+    prd_path="",
+    prototype_path="",
 ):
     """Run the startup logic. Can be called from CLI or other Python scripts."""
     from metagpt.config2 import config
@@ -38,7 +41,35 @@ def generate_repo(
     from metagpt.team import Team
 
     config.update_via_cli(project_path, project_name, inc, reqa_file, max_auto_summarize_code)
+    #import os
+    #os.environ["METAGPT_IDEA"] = idea  # ← 存入环境变量
+    # UPDATE MODE：把现有 PRD 和原型内容注入到 idea 里
+    if update_mode:
+        from pathlib import Path
+        print(f" UPDATE MODE 已激活，PRD路径: {prd_path}")  # ← 加这行
+        existing_context = "[UPDATE MODE]\n"
+        existing_context += """CRITICAL INSTRUCTIONS FOR ALICE (Product Manager):
+        1. DO NOT rewrite the entire PRD from scratch
+        2. READ the existing PRD carefully
+        3. ONLY add or modify sections affected by the change request
+        4. Keep all existing content unchanged
+        5. Add a new section '## Change Log' at the end documenting what was changed and why
+        6. Apply POV Statement, 5 Whys, and Jobs Scoping skills to analyze the change request FIRST
+        7. Then update ONLY the relevant PRD sections
+        8. To update the PRD file, use Editor.append_file to add new sections. Do NOT use edit_file_by_replace unless you know exact line numbers.\n\n"""
+
+        if prd_path and Path(prd_path).exists():
+            existing_context += f"## Existing PRD\nPath: {prd_path}\n"
+            existing_context += Path(prd_path).read_text(encoding="utf-8") + "\n\n"
+        if prototype_path and Path(prototype_path).exists():
+            existing_context += f"## Existing Prototype\nPath: {prototype_path}\n"
+            existing_context += "(Prototype file exists, Alex should read and modify it incrementally)\n\n"
+        existing_context += f"## Change Request\n{idea}\n"
+        idea = existing_context
+    import os
+    os.environ["METAGPT_IDEA"] = idea  # ← 存入环境变量
     ctx = Context(config=config)
+
 
     if not recover_path:
         company = Team(context=ctx)
@@ -69,6 +100,7 @@ def generate_repo(
         idea = company.idea
 
     company.invest(investment)
+
     asyncio.run(company.run(n_round=n_round, idea=idea))
 
     return ctx.kwargs.get("project_path")
@@ -97,6 +129,9 @@ def startup(
         "unlimited. This parameter is used for debugging the workflow.",
     ),
     recover_path: str = typer.Option(default=None, help="recover the project from existing serialized storage"),
+    update_mode: bool = typer.Option(default=False, help="Incremental update mode: modify existing PRD and prototype."),
+    prd_path: str = typer.Option(default="", help="Path to existing PRD file."),
+    prototype_path: str = typer.Option(default="", help="Path to existing prototype HTML file."),
     init_config: bool = typer.Option(default=False, help="Initialize the configuration file for MetaGPT."),
 ):
     """Run a startup. Be a boss."""
@@ -121,6 +156,9 @@ def startup(
         reqa_file,
         max_auto_summarize_code,
         recover_path,
+        update_mode,
+        prd_path,
+        prototype_path,
     )
 
 

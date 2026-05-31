@@ -71,6 +71,17 @@ NEW_REQ_TEMPLATE = """
 {requirements}
 """
 
+def load_kano_skill():
+    path = Path(
+        "metagpt/skills/ProductManagementSkill/KanoModel/skprompt.txt"
+    )
+
+    if path.exists():
+        return path.read_text(
+            encoding="utf-8"
+        )
+
+    return ""
 
 @register_tool(include_functions=["run"])
 class WritePRD(Action):
@@ -208,7 +219,17 @@ class WritePRD(Action):
 
     async def _new_prd(self, requirement: str) -> ActionNode:
         project_name = self.project_name
-        context = CONTEXT_TEMPLATE.format(requirements=requirement, project_name=project_name)
+        context = CONTEXT_TEMPLATE.format(
+            requirements=requirement,
+            project_name=project_name
+        )
+
+        # Inject Kano Skill
+        kano_prompt = load_kano_skill()
+
+        if kano_prompt:
+            context += "\n\n## PRODUCT MANAGEMENT SKILL\n"
+            context += kano_prompt
         exclude = [PROJECT_NAME.key] if project_name else []
         node = await WRITE_PRD_NODE.fill(
             req=context, llm=self.llm, exclude=exclude, schema=self.prompt_schema

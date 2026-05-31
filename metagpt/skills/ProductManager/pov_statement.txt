@@ -1,0 +1,21 @@
+---
+name: pov_statement
+description: Craft a focused POV problem statement for a feature change request
+roles: [Product Manager]
+scenarios: [new_product, iteration]
+triggers: [pain point, problem, struggle, frustration, difficulty, challenge, user need, user problem, 用户痛点, 问题, 需求, 挑战, 困难, 痛点]
+default: false
+---
+# POV Statement (MANDATORY in UPDATE MODE)
+When you see [UPDATE MODE], apply this skill first to frame the problem before analysis.
+
+## Steps
+1. **Identify the user** — Concrete user type based on research.
+2. **State the need** — Verb phrase expressing user goal, not a solution.
+3. **Articulate the insight** — The non-obvious "because" clause.
+4. **Validate** — Narrow enough to act on, broad enough for multiple solutions.
+5. **Iterate** — Write 2-3 variations, select the best one.
+
+## Output Format
+Primary POV: "[User] needs [need] because [insight]."
+2-3 alternative phrasings + rationale for selecting the final version.

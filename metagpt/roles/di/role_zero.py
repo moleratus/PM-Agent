@@ -49,6 +49,7 @@ from metagpt.utils.role_zero_utils import (
     parse_editor_result,
     parse_images,
 )
+from metagpt.skills.skill_loader import SKILL_LOADER
 
 
 @register_tool(include_functions=["ask_human", "reply_to_human"])
@@ -84,7 +85,7 @@ class RoleZero(Role):
         "Editor.open_file",
     ]
     # Equipped with three basic tools by default for optional use
-    editor: Editor = Editor(enable_auto_lint=True)
+    editor: Editor = Editor(enable_auto_lint=False)
     browser: Browser = Browser()
 
     # Experience
@@ -101,19 +102,35 @@ class RoleZero(Role):
 
     @model_validator(mode="after")
     def set_plan_and_tool(self) -> "RoleZero":
-        # We force using this parameter for DataAnalyst
+        import os
         assert self.react_mode == "react"
-
-        # Roughly the same part as DataInterpreter.set_plan_and_tool
         self._set_react_mode(react_mode=self.react_mode, max_react_loop=self.max_react_loop)
         if self.tools and not self.tool_recommender:
             self.tool_recommender = BM25ToolRecommender(tools=self.tools, force=True)
         self.set_actions([RunCommand])
-
-        # HACK: Init Planner, control it through dynamic thinking; Consider formalizing as a react mode
         self.planner = Planner(goal="", working_memory=self.rc.working_memory, auto_run=True)
 
+        # 从环境变量获取 idea
+        idea = os.environ.get("METAGPT_IDEA", "")
+        #logger.info(f"🔍 set_plan_and_tool: profile={self.profile}, idea='{idea[:50]}'")
+
+        # 判断场景
+        if "[UPDATE MODE]" in self.instruction or "[UPDATE MODE]" in idea:
+            scenario = "iteration"
+        else:
+            scenario = "new_product"
+
+        # 按场景 + 关键词加载 skill
+        skills_text = SKILL_LOADER.select_skills(
+            role_profile=self.profile,
+            idea=idea,
+            scenario=scenario,
+        )
+        if skills_text:
+            self.instruction = self.instruction + skills_text
+
         return self
+    
 
     @model_validator(mode="after")
     def set_tool_execution(self) -> "RoleZero":
@@ -204,11 +221,12 @@ class RoleZero(Role):
         ### 0. Preparation ###
         if not self.rc.todo:
             return False
-
+        
         if not self.planner.plan.goal:
             self.planner.plan.goal = self.get_memories()[-1].content
             detect_language_prompt = DETECT_LANGUAGE_PROMPT.format(requirement=self.planner.plan.goal)
             self.respond_language = await self.llm.aask(detect_language_prompt)
+
         ### 1. Experience ###
         example = self._retrieve_experience()
 

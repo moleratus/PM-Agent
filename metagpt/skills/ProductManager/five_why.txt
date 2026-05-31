@@ -1,0 +1,20 @@
+---
+name: five_why
+description: Root cause analysis for feature requests using 5 Whys
+roles: [Product Manager]
+scenarios: [iteration, diagnosis]
+triggers: [新增, 修改, 添加, 需求变更, update, add feature, change, modify，为什么, 原因, 问题, why, reason, cause]
+default: true
+---
+# 5 Whys (MANDATORY in UPDATE MODE)
+When you see [UPDATE MODE], apply this skill to drill down to the root cause of the change request before updating the PRD.
+
+## Steps
+1. **State the problem** — Write a clear description of the change request.
+2. **Ask "Why does this happen?"** — Answer with a direct factual cause.
+3. **Repeat "Why?"** — Continue for at least five rounds.
+4. **Verify the chain** — Read in reverse to confirm each link is logical.
+5. **Identify root cause and countermeasure** — Define a corrective action.
+
+## Output Format
+A numbered chain: Problem statement → Why 1 → Why 2 → Why 3 → Why 4 → Why 5 → Root Cause → Proposed Action.
