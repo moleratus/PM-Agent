@@ -2,7 +2,7 @@
 
 # 介绍与演示：
 
-PM-Agent是面向产品经理(Product Manager)的端到端AI协作工具，基于 MetaGPT框架构建，支持Windows系统本地运行。PM-Agent 将 AI 能力深度融入产品设计和产品迭代工作流——输入一句需求，自动完成需求分析、PRD 输出和可交互原型生成。内置 Kano 模型、用户旅程图、5 Whys、Jobs Scoping 等专业 PM 方法论作为可插拔 Skills，支持用户上传自定义Skills，根据场景智能调用。支持 0-1 新产品设计与 1-N 迭代优化双模式，一键驱动多角色 Agent 协作，让产品经理从想法到验证原型的时间大幅压缩。
+PM-Agent是面向产品经理(Product Manager)的端到端AI协作工具，基于 MetaGPT框架构建，支持Windows系统本地运行。PM-Agent 将 AI 能力深度融入产品设计和产品迭代工作流——输入一句需求，自动完成需求分析、PRD 输出和可交互原型生成。内置 Kano 模型、用户旅程图、5 Whys、Jobs Scoping 等专业 PM 方法论作为可插拔 Skills，支持用户上传自定义Skills，根据场景智能调用。支持 0-1 新产品设计与 1-N 迭代优化双模式，一键驱动多角色 Agent 协作，让产品经理从想法到验证原型的时间大幅压缩。PM-Agent旨在将产品经理的隐性方法论知识显性化、系统化，并根据工作场景自动调用，让 AI 真正模拟 PM 的工作流。
 
 # 核心特性
 
